@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback,useState} from 'react';
 import { useDispatch } from 'react-redux';
 import { useMount, usePrevious, useUpdateEffect } from 'react-use';
 import styled from 'styled-components';
@@ -22,6 +22,7 @@ import { STATUS } from 'literals';
 import { getRepos, showAlert } from 'actions';
 
 import Loader from 'components/Loader';
+import { marginLeft } from 'styled-system';
 
 const Item = styled(Link)`
   align-items: center;
@@ -63,6 +64,7 @@ const ItemHeader = styled.div`
 `;
 
 function GitHub() {
+  let countRepo= 0;
   const dispatch = useDispatch();
   const { data, message, query, status } = useShallowEqualSelector(({ github }) => ({
     data: github.topics[github.query]?.data || [],
@@ -93,6 +95,7 @@ function GitHub() {
 
   const isRunning = status === STATUS.RUNNING;
   let output;
+  STATUS.RUNNING ? countRepo= data.length : 0;
 
   if (status === STATUS.SUCCESS) {
     if (data.length) {
@@ -152,7 +155,9 @@ function GitHub() {
             size="lg"
           >
             React
+            
           </Button>
+          
           <Button
             busy={query === 'redux' && isRunning}
             data-topic="redux"
@@ -161,6 +166,7 @@ function GitHub() {
             size="lg"
           >
             Redux
+           
           </Button>
           <Button
             busy={query === 'amrik' && isRunning}
@@ -170,8 +176,15 @@ function GitHub() {
             size="lg"
           >
             Amrik
+           
           </Button>
         </ButtonGroup>
+      </Flex>
+      <Flex justifyContent="center" style={{marginLeft : query==="amrik"? "140px" : "0px",marginRight: query==="react"? "140px" : "0px"}}>
+        
+        
+       
+        {countRepo}
       </Flex>
       {output}
     </div>
